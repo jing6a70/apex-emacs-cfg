@@ -21,9 +21,8 @@
         lsp-completion-provider :capf
         lsp-use-plists t)  ; 推荐开启
 
-  ;; 全局性能调优（如果还没在别处设置）
-  (setq gc-cons-threshold 100000000
-        read-process-output-max (* 1024 1024)))
+  ;; 全局性能调优
+  (setq read-process-output-max (* 1024 1024)))
 
 (use-package lsp-ui
   :ensure t
@@ -45,8 +44,7 @@
         lsp-ui-sideline-ignore-duplicate t
         lsp-headerline-breadcrumb-enable t)
   :config
-  (setq lsp-ui-flycheck-enable nil)
-  (treemacs-resize-icons 14))
+  (setq lsp-ui-flycheck-enable nil))
 
 
 ;; vertico lsp
@@ -65,8 +63,6 @@
   ;; 可选绑定快捷键（推荐）
   (define-key lsp-mode-map (kbd "M-9") #'lsp-treemacs-errors-list)
   (define-key lsp-mode-map (kbd "C-c s") #'lsp-treemacs-symbols))
-
-(lsp-treemacs-sync-mode 1)
 
 ;; 加载 特定模式的LSP
 ;; Python

@@ -67,11 +67,6 @@
         ("C-x t C-t" . treemacs-find-file)
         ("C-x t M-t" . treemacs-find-tag)))
 
-;; 增强包
-(use-package treemacs-projectile
-  :ensure t
-  :after (treemacs projectile))
-
 (use-package treemacs-icons-dired
   :ensure t
   :hook (dired-mode . treemacs-icons-dired-mode))

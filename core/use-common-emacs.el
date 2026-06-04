@@ -1,9 +1,9 @@
 ;;; Code:
 ;;  进行简约配置: 关闭菜单栏, 工具栏, 滑动条
 ;;  Choose a minimalist configuration: close memubar, toolbar, scrollbar.
-(menu-bar-mode t)
+(menu-bar-mode -1)
 (tool-bar-mode -1)
-(scroll-bar-mode t)
+(scroll-bar-mode -1)
 
 ;; 禁止开机启动界面, 设置默认光标类型
 ;; inhibit splash screen and set default cursor type

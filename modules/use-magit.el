@@ -10,15 +10,26 @@
   (setq magit-diff-refine-hunk 'all)     ; diff 高亮更细粒度（所有单词级变化）
   (setq magit-save-repository-buffers 'dontask)  ; 保存相关缓冲区时不询问
   (setq magit-revision-show-gravatars t) ; 显示作者头像（可选，美观）
+  (setq magit-refresh-status-buffer nil) ; 关闭自动刷新，提升大型仓库性能（Magit 手册推荐）
+  
+  ;; 可选优化：避免 GPG 签名报错（无 GPG 环境必备）
+  (setq magit-commit-signoff nil)
+  (setq magit-gpg-sign-commit nil)
+  
+  ;; 可选优化：关闭 Magit 后恢复原窗口布局
+  (setq magit-bury-buffer-function #'magit-restore-window-configuration-and-bury-buffer)
 
-  ;; 可选：更快 rebase（Magit 手册推荐）
-  (setq magit-refresh-status-buffer nil)
-
-  ;; 如果你用 diff 高亮工具（更好看）
+  ;; 联动 diff-hl：更好的 diff 高亮可视化
   (use-package diff-hl
     :ensure t
     :hook ((magit-pre-refresh . diff-hl-magit-pre-refresh)
            (magit-post-refresh . diff-hl-magit-post-refresh))
-    :config (global-diff-hl-mode)))
+    :config
+    (global-diff-hl-mode)
+    (diff-hl-flydiff-mode t)
+    (setq diff-hl-show-staged-changes t)
+    (when (not (display-graphic-p))
+      (setq diff-hl-side 'right)
+      (diff-hl-margin-mode))))
 
 (provide 'use-magit)

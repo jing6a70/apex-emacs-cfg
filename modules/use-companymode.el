@@ -12,7 +12,7 @@
   :config
   ;; 基础设置
   (setq company-minimum-prefix-length 1
-        company-idle-delay 0
+        company-idle-delay 0.1
         company-echo-delay 0
         company-show-numbers t
         company-tooltip-limit 20

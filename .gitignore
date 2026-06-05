@@ -11,3 +11,4 @@ eln-cache/
 elpa/
 .config-auto.el
 history
+.deepseek/

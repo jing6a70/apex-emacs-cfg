@@ -15,11 +15,11 @@
         lsp-enable-indentation t
         lsp-enable-on-type-formatting t
         lsp-auto-guess-root nil
-        lsp-enable-snippet t
+        lsp-enable-snippet t  ; yasnippet 已恢复，开启 LSP snippet 支持
         lsp-modeline-diagnostics-enable t
         lsp-idle-delay 0.5
         lsp-completion-provider :capf
-        lsp-use-plists t)  ; 推荐开启
+        lsp-use-plists nil)  ; 暂时关闭 plist，避免 hash-table-p 兼容错误
 
   ;; 全局性能调优
   (setq read-process-output-max (* 1024 1024)))

@@ -25,13 +25,24 @@
         company-dabbrev-other-buffers 'all
         company-begin-commands '(self-insert-command))
 
-  ;; capf 负责LSP补全，company-yasnippet 负责代码模板
-  ;; 分开注册为独立 backend，避免 :with 合并后 capf 无匹配时 snippet 也不显示
-  (setq company-backends
-        '((company-capf)
-          (company-yasnippet)
-          (company-dabbrev-code)
-          (company-files)))
+  ;; 合并 capf + yasnippet 为一个 backend 组，两者结果同时显示
+  ;; :separate 让 LSP补全和代码模板在菜单中分行显示、互不干扰
+  ;; 先移除默认的 company-capf，避免重复
+  (setq company-backends (delq 'company-capf company-backends))
+  (add-to-list 'company-backends '(company-capf :separate company-yasnippet))
+
+  ;; lsp-mode 的 lsp-completion-mode 会通过 cl-adjoin 把单独的
+  ;; company-capf 插回 buffer-local company-backends 头部，破坏上面的
+  ;; group 配置。用 advice 在 lsp-completion-mode 执行后修正。
+  (defun my/company-backends-after-lsp (&rest _)
+    "Fix buffer-local company-backends after lsp-completion-mode."
+    (when (bound-and-true-p company-mode)
+      (setq-local company-backends
+                  (cons '(company-capf :separate company-yasnippet)
+                        (remove 'company-capf company-backends)))))
+
+  (with-eval-after-load 'lsp-completion
+    (advice-add 'lsp-completion-mode :after #'my/company-backends-after-lsp))
   )
 
 (use-package company-quickhelp
@@ -45,7 +56,5 @@
   :after company
   :init
   (company-prescient-mode 1))
-
-
 
 (provide 'use-companymode)

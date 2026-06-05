@@ -2,17 +2,27 @@
 
 (use-package treemacs
   :ensure t
-  :defer t
   :init
   (when (boundp 'winum-keymap)
     (define-key winum-keymap (kbd "M-0") #'treemacs-select-window))
+  :bind
+  ((:map global-map
+         ("M-0"       . treemacs-select-window)
+         ("C-x t 1"   . treemacs-delete-other-windows)
+         ("C-x t t"   . treemacs)
+         ("C-x t B"   . treemacs-bookmark)
+         ("C-x t C-t" . treemacs-find-file)
+         ("C-x t M-t" . treemacs-find-tag))
+   (:map treemacs-mode-map
+         ("C-x }" . treemacs-increase-width)
+         ("C-x {" . treemacs-decrease-width)))
   :config
   (setq treemacs-collapse-dirs                   3
         treemacs-deferred-git-apply-delay        0.5
         treemacs-directory-name-transformer      #'identity
         treemacs-display-in-side-window          t
         treemacs-eldoc-display                   'simple
-        treemacs-file-event-delay                2000      ; 优化性能
+        treemacs-file-event-delay                2000
         treemacs-file-follow-delay               0.2
         treemacs-file-name-transformer           #'identity
         treemacs-follow-after-init               t
@@ -41,7 +51,11 @@
         treemacs-space-between-root-nodes        t
         treemacs-tag-follow-delay                1.5
         treemacs-width                           35
-        treemacs-width-increment                 5)
+        treemacs-width-increment                 5
+        treemacs-width-is-initially-locked       nil)  ; 允许鼠标拖拽调整宽度
+
+  ;; 鼠标拖拽：像素级精确调整窗口大小
+  (setq window-resize-pixelwise t)
 
   ;; HiDPI 图标 — 当前 Emacs 无 imagemagick，resize-icons 无效且导致模糊
   ;; (treemacs-resize-icons 44)
@@ -50,7 +64,7 @@
   (treemacs-follow-mode t)
   (treemacs-filewatch-mode t)
   (treemacs-fringe-indicator-mode 'always)
-  (treemacs-hide-gitignored-files-mode t)  ; 推荐加：隐藏 .gitignore 文件
+  (treemacs-hide-gitignored-files-mode t)
 
   ;; Git 集成
   (pcase (cons (not (null (executable-find "git")))
@@ -58,14 +72,8 @@
     (`(t . t) (treemacs-git-mode 'deferred))
     (`(t . _) (treemacs-git-mode 'simple)))
 
-  :bind
-  (:map global-map
-        ("M-0"       . treemacs-select-window)
-        ("C-x t 1"   . treemacs-delete-other-windows)
-        ("C-x t t"   . treemacs)
-        ("C-x t B"   . treemacs-bookmark)
-        ("C-x t C-t" . treemacs-find-file)
-        ("C-x t M-t" . treemacs-find-tag)))
+  ;; 启动时自动打开
+  (treemacs))
 
 (use-package treemacs-icons-dired
   :ensure t
@@ -74,12 +82,6 @@
 (use-package treemacs-magit
   :ensure t
   :after (treemacs magit))
-
-;; 如果你不用 persp-mode，可删除下面这块
-;; (use-package treemacs-persp
-;;   :ensure t
-;;   :after (treemacs persp-mode)
-;;   :config (treemacs-set-scope-type 'Perspectives))
 
 (provide 'use-treemacs)
 ;;; use-treemacs.el ends here

@@ -3,5 +3,7 @@
 
 (global-set-key (kbd "<f5>") 'open-e2macs-man)
 
+(global-set-key (kbd "<f6>") 'my/cmake-update-compile-commands)  ; 一键更新 compile_commands.json
+
 
 (provide 'init-func-key)

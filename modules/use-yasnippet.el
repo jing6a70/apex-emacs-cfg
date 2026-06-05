@@ -3,8 +3,9 @@
 (use-package yasnippet
   :ensure t
   :config
-  (add-to-list 'yas-snippet-dirs "~/.emacs.d/snippets")
-  (yas-global-mode t))
+  (add-to-list 'yas-snippet-dirs (expand-file-name "snippets" user-emacs-directory))
+  (yas-global-mode t)
+  (yas-reload-all))
 
 
 (provide 'use-yasnippet)

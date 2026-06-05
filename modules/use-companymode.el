@@ -25,11 +25,13 @@
         company-dabbrev-other-buffers 'all
         company-begin-commands '(self-insert-command))
 
-  ;; 优先使用 capf（lsp-mode 会通过它提供补全）
-  (add-to-list 'company-backends '(company-capf :with company-yasnippet))
-
-  ;; 可选：其他通用 backend
-  ;; (add-to-list 'company-backends 'company-files)
+  ;; capf 负责LSP补全，company-yasnippet 负责代码模板
+  ;; 分开注册为独立 backend，避免 :with 合并后 capf 无匹配时 snippet 也不显示
+  (setq company-backends
+        '((company-capf)
+          (company-yasnippet)
+          (company-dabbrev-code)
+          (company-files)))
   )
 
 (use-package company-quickhelp

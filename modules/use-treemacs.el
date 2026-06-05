@@ -43,8 +43,8 @@
         treemacs-width                           35
         treemacs-width-increment                 5)
 
-  ;; HiDPI 推荐开启
-  (treemacs-resize-icons 44)
+  ;; HiDPI 图标 — 当前 Emacs 无 imagemagick，resize-icons 无效且导致模糊
+  ;; (treemacs-resize-icons 44)
 
   ;; 模式启用
   (treemacs-follow-mode t)

@@ -33,5 +33,8 @@
 ;; docstring 长度设置,防止lsp-mode报警
 (setq byte-compile-docstring-max-column 120)
 
-;; 命令行打开文件时不保留 *scratch* buffer
-(setq initial-buffer-choice t)
+;; 禁用 GUI 对话框，所有交互走 minibuffer（避免弹出系统文件选择器）
+(setq use-dialog-box nil)
+
+;; 命令行打开文件时不保留 *scratch* buffer（nil: 有文件参数时只打开文件）
+(setq initial-buffer-choice nil)

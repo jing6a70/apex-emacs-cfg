@@ -1,0 +1,1 @@
+("~/.emacs.d/" "~/Desktop/Qt/QtPrimi/")

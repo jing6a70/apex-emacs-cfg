@@ -6,8 +6,8 @@
   :init
   (when (boundp 'winum-keymap)
     (define-key winum-keymap (kbd "M-0") #'treemacs-select-window))
-  ;; 启动完成后自动打开 treemacs
-  (add-hook 'after-init-hook (lambda () (treemacs)))
+  ;; 启动完成后自动打开 treemacs（emacs-startup-hook 在文件加载完毕后执行，避免分屏）
+  (add-hook 'emacs-startup-hook (lambda () (treemacs)))
   :bind
   ((:map global-map
          ("M-0"       . treemacs-select-window)
@@ -82,6 +82,25 @@
 (use-package treemacs-magit
   :ensure t
   :after (treemacs magit))
+
+(use-package projectile
+  :ensure t
+  :config
+  (projectile-mode +1))
+
+(use-package treemacs-projectile
+  :ensure t
+  :after (treemacs projectile)
+  :config
+  ;; 打开文件时自动将当前 projectile 项目加入 Treemacs workspace
+  (defun my/treemacs-auto-add-project ()
+    "如果当前 buffer 属于 projectile 项目且该项目不在 Treemacs 中，自动添加。"
+    (when-let ((root (ignore-errors (projectile-project-root))))
+      (let ((canonical (treemacs-canonical-path root)))
+        (unless (or (treemacs-is-path canonical :in-workspace)
+                    (string-equal canonical (treemacs-canonical-path user-emacs-directory)))
+          (treemacs-add-project-to-workspace canonical)))))
+  (add-hook 'find-file-hook #'my/treemacs-auto-add-project))
 
 (provide 'use-treemacs)
 ;;; use-treemacs.el ends here

@@ -67,25 +67,15 @@
   (add-hook 'lsp-after-initialize-hook
             (lambda ()
               (run-with-idle-timer 2 nil #'lsp-treemacs-symbols)
-              (run-with-idle-timer 2.5 nil #'lsp-ui-imenu)))  ; 启动后自动显示面板
+              ;; (run-with-idle-timer 2.5 nil #'lsp-ui-imenu)  ; 取消自动弹出 imenu
+              ))  ; 启动后自动显示面板
   :config
   (define-key lsp-mode-map (kbd "M-9") #'lsp-treemacs-errors-list)
   (define-key lsp-mode-map (kbd "C-c s") #'lsp-treemacs-symbols)
   (define-key lsp-mode-map (kbd "C-c i") #'lsp-ui-imenu)
   ;; lsp-ui-imenu: 双击跳转 + 切 buffer 自动刷新
   (with-eval-after-load 'lsp-ui-imenu
-    (define-key lsp-ui-imenu-mode-map (kbd "<double-mouse-1>") #'lsp-ui-imenu--visit))
-  (defvar my/lsp-imenu-refresh-timer nil)
-  (defun my/lsp-imenu-auto ()
-    (when (timerp my/lsp-imenu-refresh-timer)
-      (cancel-timer my/lsp-imenu-refresh-timer))
-    (setq my/lsp-imenu-refresh-timer
-          (run-with-timer 0.3 nil
-                          (lambda ()
-                            (when (bound-and-true-p lsp-mode)
-                              (ignore-errors (lsp-ui-imenu)))))))
-  (advice-add 'switch-to-buffer :after (lambda (&rest _) (my/lsp-imenu-auto)))
-  (advice-add 'other-window    :after (lambda (&rest _) (my/lsp-imenu-auto))))
+    (define-key lsp-ui-imenu-mode-map (kbd "<double-mouse-1>") #'lsp-ui-imenu--visit)))
 
 ;; 加载 特定模式的LSP
 ;; Python

@@ -2,9 +2,12 @@
 
 (use-package treemacs
   :ensure t
+  :defer t
   :init
   (when (boundp 'winum-keymap)
     (define-key winum-keymap (kbd "M-0") #'treemacs-select-window))
+  ;; 启动完成后自动打开 treemacs
+  (add-hook 'after-init-hook (lambda () (treemacs)))
   :bind
   ((:map global-map
          ("M-0"       . treemacs-select-window)
@@ -52,13 +55,10 @@
         treemacs-tag-follow-delay                1.5
         treemacs-width                           35
         treemacs-width-increment                 5
-        treemacs-width-is-initially-locked       nil)  ; 允许鼠标拖拽调整宽度
+        treemacs-width-is-initially-locked       nil)
 
   ;; 鼠标拖拽：像素级精确调整窗口大小
   (setq window-resize-pixelwise t)
-
-  ;; HiDPI 图标 — 当前 Emacs 无 imagemagick，resize-icons 无效且导致模糊
-  ;; (treemacs-resize-icons 44)
 
   ;; 模式启用
   (treemacs-follow-mode t)
@@ -67,13 +67,13 @@
   (treemacs-hide-gitignored-files-mode t)
 
   ;; Git 集成
-  (pcase (cons (not (null (executable-find "git")))
-               (not (null (executable-find "python3"))))
-    (`(t . t) (treemacs-git-mode 'deferred))
-    (`(t . _) (treemacs-git-mode 'simple)))
-
-  ;; 启动时自动打开
-  (treemacs))
+  (let ((has-git (executable-find "git"))
+        (has-python (executable-find "python3")))
+    (cond
+     ((and has-git has-python)
+      (treemacs-git-mode 'deferred))
+     (has-git
+      (treemacs-git-mode 'simple)))))
 
 (use-package treemacs-icons-dired
   :ensure t

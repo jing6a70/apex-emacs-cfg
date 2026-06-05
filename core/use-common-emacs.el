@@ -32,3 +32,6 @@
 
 ;; docstring 长度设置,防止lsp-mode报警
 (setq byte-compile-docstring-max-column 120)
+
+;; 命令行打开文件时不保留 *scratch* buffer
+(setq initial-buffer-choice t)
